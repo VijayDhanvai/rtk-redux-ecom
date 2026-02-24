@@ -1,7 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../store/store";
 import { removeFromCart, clearCart } from "../../store/cartSlice";
-import CartQry from "../CartQry";
 import CartQty from "../CartQry";
 
 export default function Cart() {

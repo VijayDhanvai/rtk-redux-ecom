@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch } from "../../store/store";
 import { addToCart } from "../../store/cartSlice";
 import CartQty from "../CartQry";
-import Cart from "./Cart";
-
+ 
 export default function Products() {
   const dispatch = useDispatch<AppDispatch>();
   const { data, error, isLoading } = useGetProductsQuery({});
