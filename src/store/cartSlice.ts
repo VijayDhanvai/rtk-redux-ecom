@@ -47,6 +47,9 @@ const cartSlice = createSlice({
       if (item) {
         item.quantity = Math.max(0, item.quantity - 1);
       }
+      item?.quantity === 0 && (
+        state.items = state.items.filter(i => i.id !== action.payload)
+      )
     },
   },
 });
