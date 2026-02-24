@@ -1,6 +1,8 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, BellIcon, XMarkIcon, ShoppingCartIcon } from '@heroicons/react/24/outline'
 import { Link, useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux';
+import type { RootState } from '../store/store';
 
 const navigation = [
   { name: 'Dashboard', href: '/', current: true },
@@ -16,6 +18,10 @@ function classNames(...classes: string[]) {
 export default function Header() {
   const location = useLocation()
   
+  const cartQuantity = useSelector((state: RootState) =>
+    state.cart.items.reduce((sum, i) => sum + (i.quantity || 0), 0)
+  );
+
   return (
     <Disclosure as="nav" className="relative bg-gray-800">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -66,6 +72,14 @@ export default function Header() {
               <span className="sr-only">View notifications</span>
               <BellIcon aria-hidden="true" className="size-6" />
             </button>
+            <Link to="/cart" className="relative ml-4 text-gray-400 hover:text-white">
+              <ShoppingCartIcon className="size-6" aria-hidden="true" />
+              {cartQuantity > 0 && (
+                <span className="absolute -top-1 -right-1 inline-flex items-center justify-center rounded-full bg-red-500 px-1.5 py-0.5 text-xs font-semibold text-white">
+                  {cartQuantity}
+                </span>
+              )}
+            </Link>
 
             {/* Profile dropdown */}
             <Menu as="div" className="relative ml-3">
