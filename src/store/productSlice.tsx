@@ -18,11 +18,11 @@ const productSlice = createSlice({
     },
   },
   reducers: {
-    addProduct(state, action) {
-      state.items.push(action.payload);
-    },
+    // addProduct(state, action) {
+    //   state.items.push(action.payload);
+    // },
   },
 });
  
-export const { addProduct } = productSlice.actions;
+export const {  } = productSlice.actions;
 export default productSlice.reducer;

@@ -3,7 +3,26 @@ import { configureStore } from "@reduxjs/toolkit";
 import { productsApi } from "../services/productsApi";
 import cartReducer from './cartSlice';
 
- 
+
+function loadCart() {
+  try {
+    const json = localStorage.getItem("cart");
+    if (json === null) return undefined;
+    return JSON.parse(json);
+  } catch {
+    return undefined;
+  }
+}
+
+function saveCart(cartState: unknown) {
+  try {
+    const json = JSON.stringify(cartState);
+    localStorage.setItem("cart", json);
+  } catch {
+    // ignore write errors
+  }
+}
+ const preloadedCart = loadCart();
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
@@ -14,7 +33,16 @@ export const store = configureStore({
   // and other useful features of `rtk-query`.
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(productsApi.middleware),
+
+  preloadedState: {
+    cart: preloadedCart,
+  },
 })
+
+store.subscribe(() => {
+  // only persist the cart slice
+  saveCart(store.getState().cart);
+});
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
