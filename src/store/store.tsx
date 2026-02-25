@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
  import { setupListeners } from '@reduxjs/toolkit/query'
 import { productsApi } from "../services/productsApi";
 import cartReducer from './cartSlice';
-
+import filtersReducer from './filtersSlice';
 
 function loadCart() {
   try {
@@ -26,6 +26,7 @@ function saveCart(cartState: unknown) {
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
+    filters: filtersReducer,
     [productsApi.reducerPath]: productsApi.reducer,
   },
 

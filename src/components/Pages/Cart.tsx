@@ -24,7 +24,7 @@ export default function Cart() {
   }, 0);
 
   return (
-    <div className="p-8  max-w-[1100px] mx-auto">
+    <div className="p-8  max-w-275 mx-auto">
       <h2 className="text-2xl font-bold mb-4">Shopping Cart</h2>
       <ul className="space-y-4">
         {items.map((item) => (
