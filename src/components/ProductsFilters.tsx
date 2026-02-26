@@ -1,68 +1,92 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
+import { useState } from "react";
 import {
   Dialog,
   DialogBackdrop,
   DialogPanel,
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
   Menu,
   MenuButton,
   MenuItem,
   MenuItems,
-} from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
-import { useDispatch, useSelector } from 'react-redux'
-import { filterByCategory, filterByRating } from '../store/filtersSlice'
-import ProductsCards from './ProductsCards'
+} from "@headlessui/react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  ChevronDownIcon,
+  FunnelIcon,
+  Squares2X2Icon,
+} from "@heroicons/react/20/solid";
+import { useDispatch, useSelector } from "react-redux";
+import { filterByCategory, filterByRating } from "../store/filtersSlice";
+import ProductsCards from "./ProductsCards";
+import PriceRangeSlider from "./PriceRangeSlider";
 
 const sortOptions = [
-  { name: 'Most Popular', href: '#', current: true },
-  { name: 'Best Rating', href: '#', current: false },
-  { name: 'Newest', href: '#', current: false },
-  { name: 'Price: Low to High', href: '#', current: false },
-  { name: 'Price: High to Low', href: '#', current: false },
-]
- 
-const filtersRating = [ 
-    { name: '4 Stars & up', value: 4 },
-    { name: '3 Stars & up', value: 3 },
-    { name: '2 Stars & up', value: 2 },
-    { name: '1 Star & up', value: 1 }
-]
- 
+  { name: "Most Popular", href: "#", current: true },
+  { name: "Best Rating", href: "#", current: false },
+  { name: "Newest", href: "#", current: false },
+  { name: "Price: Low to High", href: "#", current: false },
+  { name: "Price: High to Low", href: "#", current: false },
+];
+
+const filtersRating = [
+  { name: "4 Stars & up", value: 4 },
+  { name: "3 Stars & up", value: 3 },
+  { name: "2 Stars & up", value: 2 },
+  { name: "1 Star & up", value: 1 },
+];
+
 function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export default function ProductsFilters({ products, error, isLoading }: any) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const dispatch = useDispatch();
-  let uniqueCategories : any[] = ['All']; 
-
-  
-    products.map((item : any) => {
-        if (item.category && !uniqueCategories.includes(item.category)) {
-        uniqueCategories.push(item.category);
-        }
-    })
-
-    
   const filtersCat = useSelector((state: any) => state.filters);
   const filersRating = useSelector((state: any) => state.filters);
+  const [rengeSelected, setRengeSelected] = useState([
+    filersRating.minPrice,
+    filersRating.maxPrice,
+  ]);
+  const dispatch = useDispatch();
+  let uniqueCategories: any[] = ["All"];
+
+  products.map((item: any) => {
+    if (item.category && !uniqueCategories.includes(item.category)) {
+      uniqueCategories.push(item.category);
+    }
+  });
+
+  function handleRangeSlider(priceRange: any) {
+    setRengeSelected(priceRange);
+    console.log("firstdddd", rengeSelected);
+  }
+
+  console.log("first", filtersCat, filersRating);
 
   const filteredData = products.filter((product: any) => {
-    return (product.category === filtersCat.category || filtersCat.category === 'All') && (product.rating >= filersRating.rating || filersRating.rating === null);
+    return (
+      (product.category === filtersCat.category ||
+        filtersCat.category === "All") &&
+      (product.rating >= filersRating.rating || filersRating.rating === null)
+    );
   });
-    
+
+  const priceFilteredData = filteredData.filter((product: any) => {
+    return (
+      product.price >= rengeSelected[0] && product.price <= rengeSelected[1]
+    );
+  });
+
   return (
     <div className="bg-white">
       <div>
         {/* Mobile filter dialog */}
-        <Dialog open={mobileFiltersOpen} onClose={setMobileFiltersOpen} className="relative z-40 lg:hidden">
+        <Dialog
+          open={mobileFiltersOpen}
+          onClose={setMobileFiltersOpen}
+          className="relative z-40 lg:hidden"
+        >
           <DialogBackdrop
             transition
             className="fixed inset-0 bg-black/25 transition-opacity duration-300 ease-linear data-closed:opacity-0"
@@ -92,9 +116,7 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
                 <ul role="list" className="px-2 py-3 font-medium text-gray-900">
                   {uniqueCategories.map((category) => (
                     <li key={category}>
-                      <span className="block px-2 py-3">
-                        {category}
-                      </span>
+                      <span className="block px-2 py-3">{category}</span>
                     </li>
                   ))}
                 </ul>
@@ -103,24 +125,51 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
                   <h3 className="text-sm font-medium text-gray-900">Rating</h3>
                   <fieldset className="mt-3 space-y-3">
                     <label className="flex items-center text-sm text-gray-700">
-                      <input type="radio" name="rating" value="4" className="mr-3 h-4 w-4 text-indigo-600" />
+                      <input
+                        type="radio"
+                        name="rating"
+                        value="4"
+                        className="mr-3 h-4 w-4 text-indigo-600"
+                      />
                       <span>4 Stars & up</span>
                     </label>
                     <label className="flex items-center text-sm text-gray-700">
-                      <input type="radio" name="rating" value="3" className="mr-3 h-4 w-4 text-indigo-600" />
+                      <input
+                        type="radio"
+                        name="rating"
+                        value="3"
+                        className="mr-3 h-4 w-4 text-indigo-600"
+                      />
                       <span>3 Stars & up</span>
                     </label>
                     <label className="flex items-center text-sm text-gray-700">
-                      <input type="radio" name="rating" value="2" className="mr-3 h-4 w-4 text-indigo-600" />
+                      <input
+                        type="radio"
+                        name="rating"
+                        value="2"
+                        className="mr-3 h-4 w-4 text-indigo-600"
+                      />
                       <span>2 Stars & up</span>
                     </label>
                     <label className="flex items-center text-sm text-gray-700">
-                      <input type="radio" name="rating" value="1" className="mr-3 h-4 w-4 text-indigo-600" />
+                      <input
+                        type="radio"
+                        name="rating"
+                        value="1"
+                        className="mr-3 h-4 w-4 text-indigo-600"
+                      />
                       <span>1 Star & up</span>
                     </label>
                   </fieldset>
                 </div>
 
+                {/* Pricing (mobile UI only) */}
+                <div className="border-t border-gray-100 px-4 py-4">
+                  <h3 className="text-sm font-medium text-gray-900">Price</h3>
+                  <div className="mt-3">
+                    <PriceRangeSlider />
+                  </div>
+                </div>
               </form>
             </DialogPanel>
           </div>
@@ -128,7 +177,9 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
 
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-5">
           <div className="flex items-baseline justify-between border-b border-gray-200 pt-4 pb-6">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">New Arrivals</h1>
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+              New Arrivals
+            </h1>
 
             <div className="flex items-center">
               <Menu as="div" className="relative inline-block text-left">
@@ -150,8 +201,10 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
                         <a
                           href={option.href}
                           className={classNames(
-                            option.current ? 'font-medium text-gray-900' : 'text-gray-500',
-                            'block px-4 py-2 text-sm data-focus:bg-gray-100 data-focus:outline-hidden',
+                            option.current
+                              ? "font-medium text-gray-900"
+                              : "text-gray-500",
+                            "block px-4 py-2 text-sm data-focus:bg-gray-100 data-focus:outline-hidden",
                           )}
                         >
                           {option.name}
@@ -162,7 +215,10 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
                 </MenuItems>
               </Menu>
 
-              <button type="button" className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
+              <button
+                type="button"
+                className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
+              >
                 <span className="sr-only">View grid</span>
                 <Squares2X2Icon aria-hidden="true" className="size-5" />
               </button>
@@ -185,13 +241,21 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
               {/* Filters */}
               <form className="hidden lg:block">
-                <h3 className="sr-only">Categories</h3>
-                <ul role="list" className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
+                <h3 className="text-sm font-medium text-gray-900 mb-2">
+                  Categories
+                </h3>
+                <ul
+                  role="list"
+                  className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900"
+                >
                   {uniqueCategories.map((category) => (
                     <li key={category} className="m-0 p-0">
-                      <span 
-                       onClick={() => dispatch(filterByCategory(category))}
-                      className={ `block px-2 py-2 border-gray-100 border-b capitalize cursor-pointer ${category === filtersCat.category ? ' bg-blue-50 text-blue-700' : ''}` }>{category}</span>
+                      <span
+                        onClick={() => dispatch(filterByCategory(category))}
+                        className={`block px-2 py-2 border-gray-100 border-b capitalize cursor-pointer ${category === filtersCat.category ? " bg-blue-50 text-blue-700" : ""}`}
+                      >
+                        {category}
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -200,30 +264,49 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
                 <div className="  border-gray-200 pt-4">
                   <h3 className="text-sm font-medium text-gray-900">Rating</h3>
                   <fieldset className="mt-3 space-y-3 text-sm text-gray-700">
-                    {
-                        filtersRating.map((rating) => (
-                            <label className="flex items-center" key={rating.value} onClick={
-                                 () => dispatch(filterByRating(rating.value))
-                            }>
-                              <input type="radio" name="rating-desktop" value={rating.value} className="mr-3 h-4 w-4 text-indigo-600" />  
-                              <span>{rating.name}</span>
-                            </label>
-                        ))
-                    }
-                     
-                     
+                    {filtersRating.map((rating) => (
+                      <label
+                        className="flex items-center"
+                        key={rating.value}
+                        onClick={() => dispatch(filterByRating(rating.value))}
+                      >
+                        <input
+                          type="radio"
+                          name="rating-desktop"
+                          value={rating.value}
+                          className="mr-3 h-4 w-4 text-indigo-600"
+                        />
+                        <span>{rating.name}</span>
+                      </label>
+                    ))}
                   </fieldset>
+                </div>
+                {/* Pricing (desktop UI only) */}
+                <div className="mt-4 border-t border-gray-200 pt-4">
+                  <h3 className="text-sm font-medium text-gray-900">Price</h3>
+                  <div className="mt-3">
+                    <PriceRangeSlider
+                      products={filteredData}
+                      handleRangeSlider={(priceRange: any) =>
+                        handleRangeSlider(priceRange)
+                      }
+                    />
+                  </div>
                 </div>
               </form>
 
               {/* Product grid */}
               <div className="lg:col-span-3">
-                <ProductsCards products={filteredData} error={error} isLoading={isLoading} />
+                <ProductsCards
+                  products={priceFilteredData}
+                  error={error}
+                  isLoading={isLoading}
+                />
               </div>
             </div>
           </section>
         </main>
       </div>
     </div>
-  )
+  );
 }

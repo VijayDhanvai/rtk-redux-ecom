@@ -24,14 +24,18 @@ const initialState: FiltersState = {
     reducers : {
         filterByCategory(state, action) {
             state.category = action.payload;
-             
         }, 
         filterByRating(state, action) {
             state.rating = action.payload;
-        }
+        },
+        filterByPriceRange(state, action) {
+            state.minPrice = action.payload.min;
+            state.maxPrice = action.payload.max;
+        },
+        
     }
 
  })
 
-export const { filterByCategory, filterByRating } = filtersSlice.actions;
+export const { filterByCategory, filterByRating, filterByPriceRange} = filtersSlice.actions;
 export default filtersSlice.reducer;

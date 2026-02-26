@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { productsApi } from "../services/productsApi";
 import cartReducer from './cartSlice';
 import filtersReducer from './filtersSlice';
+import productSlice from "./productSlice";
 
 function loadCart() {
   try {
