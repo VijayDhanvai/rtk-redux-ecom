@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
  
-export default function PriceRangeSlider({ products, handleRangeSlider }: any) {
+export default function PriceRangeSlider({  handleRangeSlider }: any) {
    
   const filters = useSelector((state: any) => state.filters);
     

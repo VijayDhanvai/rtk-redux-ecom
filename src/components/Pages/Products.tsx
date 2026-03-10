@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useGetProductsQuery } from "../../services/productsApi";
 import ProductsFilters from "../ProductsFilters";
  import { filterByPriceRange } from "../../store/filtersSlice";

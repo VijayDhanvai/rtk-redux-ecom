@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogBackdrop,
@@ -22,11 +22,11 @@ import ProductsCards from "./ProductsCards";
 import PriceRangeSlider from "./PriceRangeSlider";
 
 const sortOptions = [
-  { name: "Most Popular", href: "#", current: true },
-  { name: "Best Rating", href: "#", current: false },
-  { name: "Newest", href: "#", current: false },
-  { name: "Price: Low to High", href: "#", current: false },
-  { name: "Price: High to Low", href: "#", current: false },
+  { name: "Most Discount",  current: true },
+  { name: "Best Rating",  current: false },
+  { name: "Newest",  current: false },
+  { name: "Price: Low to High",  current: false },
+  { name: "Price: High to Low",  current: false },
 ];
 
 const filtersRating = [
@@ -44,6 +44,7 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const filtersCat = useSelector((state: any) => state.filters);
   const filersRating = useSelector((state: any) => state.filters);
+  const [sortBy, setSortBy] = useState(sortOptions[0].name);
   const [rengeSelected, setRengeSelected] = useState([
     filersRating.minPrice,
     filersRating.maxPrice,
@@ -59,11 +60,9 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
 
   function handleRangeSlider(priceRange: any) {
     setRengeSelected(priceRange);
-    console.log("firstdddd", rengeSelected);
   }
 
-  console.log("first", filtersCat, filersRating);
-
+ 
   const filteredData = products.filter((product: any) => {
     return (
       (product.category === filtersCat.category ||
@@ -77,6 +76,24 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
       product.price >= rengeSelected[0] && product.price <= rengeSelected[1]
     );
   });
+  
+  const handleSort = (sortBy: string) => {
+    setSortBy(sortBy);
+     switch (sortBy) {
+      case "Most Discount":
+        priceFilteredData.sort((a: any, b: any) => b.discountPercentage - a.discountPercentage);
+        break;
+      case "Best Rating":
+        priceFilteredData.sort((a: any, b: any) => b.rating - a.rating);
+        break;
+      default:
+        break; 
+     }
+  };
+
+  useEffect(() => {
+    handleSort(sortBy);
+  }, [sortBy]);
 
   return (
     <div className="bg-white">
@@ -199,7 +216,7 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
                     {sortOptions.map((option) => (
                       <MenuItem key={option.name}>
                         <a
-                          href={option.href}
+                         onClick={() => handleSort(option.name)}
                           className={classNames(
                             option.current
                               ? "font-medium text-gray-900"
