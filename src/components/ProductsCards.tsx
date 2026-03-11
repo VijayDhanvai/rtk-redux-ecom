@@ -3,7 +3,21 @@ import type { AppDispatch } from "../store/store";
 import CartQty from "./CartQry";
 import { addToCart } from "../store/cartSlice";
 
-function ProductsCards({ products, error, isLoading }: any) {
+function ProductsCards({ products, error, isLoading, sortBy }: any) {
+ 
+  
+   switch (sortBy) {
+        case "Most Discount":
+          products.sort((a: any, b: any) => b.discountPercentage - a.discountPercentage);
+          break;
+          case "Best Rating":
+          
+          products.sort((a: any, b: any) => b.rating - a.rating);
+          break;
+        default:
+          break; 
+       }
+
   const dispatch = useDispatch<AppDispatch>();
   const cartItems = useSelector((state: any) => state.cart.items);
   return (

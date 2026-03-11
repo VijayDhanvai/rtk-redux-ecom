@@ -32,10 +32,13 @@ const initialState: FiltersState = {
             state.minPrice = action.payload.min;
             state.maxPrice = action.payload.max;
         },
+        setSortBy(state, action) {
+            state.sortBy = action.payload;
+        },
         
     }
 
  })
 
-export const { filterByCategory, filterByRating, filterByPriceRange} = filtersSlice.actions;
+export const { filterByCategory, filterByRating, filterByPriceRange, setSortBy} = filtersSlice.actions;
 export default filtersSlice.reducer;

@@ -17,7 +17,7 @@ import {
   Squares2X2Icon,
 } from "@heroicons/react/20/solid";
 import { useDispatch, useSelector } from "react-redux";
-import { filterByCategory, filterByRating } from "../store/filtersSlice";
+import { filterByCategory, filterByRating, setSortBy } from "../store/filtersSlice";
 import ProductsCards from "./ProductsCards";
 import PriceRangeSlider from "./PriceRangeSlider";
 
@@ -44,7 +44,10 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const filtersCat = useSelector((state: any) => state.filters);
   const filersRating = useSelector((state: any) => state.filters);
-  const [sortBy, setSortBy] = useState(sortOptions[0].name);
+
+  const sortBySelected = useSelector((state: any) => state.filters.sortBy);
+  
+
   const [rengeSelected, setRengeSelected] = useState([
     filersRating.minPrice,
     filersRating.maxPrice,
@@ -78,22 +81,11 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
   });
   
   const handleSort = (sortBy: string) => {
-    setSortBy(sortBy);
-     switch (sortBy) {
-      case "Most Discount":
-        priceFilteredData.sort((a: any, b: any) => b.discountPercentage - a.discountPercentage);
-        break;
-      case "Best Rating":
-        priceFilteredData.sort((a: any, b: any) => b.rating - a.rating);
-        break;
-      default:
-        break; 
-     }
+    dispatch(setSortBy(sortBy));
+    
   };
 
-  useEffect(() => {
-    handleSort(sortBy);
-  }, [sortBy]);
+ 
 
   return (
     <div className="bg-white">
@@ -210,7 +202,7 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
 
                 <MenuItems
                   transition
-                  className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                  className="absolute right-0 z-60 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
                 >
                   <div className="py-1">
                     {sortOptions.map((option) => (
@@ -218,10 +210,10 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
                         <a
                          onClick={() => handleSort(option.name)}
                           className={classNames(
-                            option.current
+                            option.name === sortBySelected
                               ? "font-medium text-gray-900"
                               : "text-gray-500",
-                            "block px-4 py-2 text-sm data-focus:bg-gray-100 data-focus:outline-hidden",
+                            "cursor-pointer block px-4 py-2 text-sm data-focus:bg-gray-100 data-focus:outline-hidden",
                           )}
                         >
                           {option.name}
@@ -317,6 +309,7 @@ export default function ProductsFilters({ products, error, isLoading }: any) {
                 <ProductsCards
                   products={priceFilteredData}
                   error={error}
+                  sortBy={sortBySelected}
                   isLoading={isLoading}
                 />
               </div>
