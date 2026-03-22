@@ -35,7 +35,6 @@ const initialState: FiltersState = {
         setSortBy(state, action) {
             state.sortBy = action.payload;
         },
-        
     }
 
  })

@@ -4,19 +4,26 @@ import CartQty from "./CartQry";
 import { addToCart } from "../store/cartSlice";
 
 function ProductsCards({ products, error, isLoading, sortBy }: any) {
- 
-  
-   switch (sortBy) {
-        case "Most Discount":
-          products.sort((a: any, b: any) => b.discountPercentage - a.discountPercentage);
-          break;
-          case "Best Rating":
-          
-          products.sort((a: any, b: any) => b.rating - a.rating);
-          break;
-        default:
-          break; 
-       }
+  switch (sortBy) {
+    case "Most Discount":
+      products.sort(
+        (a: any, b: any) => b.discountPercentage - a.discountPercentage,
+      );
+      break;
+    case "Best Rating":
+      products.sort((a: any, b: any) => b.rating - a.rating);
+      break;
+    case "Newest":
+      products.sort((a: any, b: any) => b?.meta?.createdAt - a?.meta?.createdAt);
+      break;
+    case "Price: Low to High":
+      products.sort((a: any, b: any) => a.price - b.price);
+      break;
+    case "Price: High to Low":
+      products.sort((a: any, b: any) => b.price - a.price);
+    default:
+      break;
+  }
 
   const dispatch = useDispatch<AppDispatch>();
   const cartItems = useSelector((state: any) => state.cart.items);
@@ -45,18 +52,21 @@ function ProductsCards({ products, error, isLoading, sortBy }: any) {
                 className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
               />
               <div className="absolute left-2 top-2 z-20 flex items-center space-x-1 rounded bg-white/90 px-2 py-1 text-xs font-semibold text-gray-800 shadow">
-
                 <p className="mt-0 text-sm capitalize text-sky-600 text-gray-500">
-                    {product.category} 
-                  </p>
-                   
+                  {product.category}
+                </p>
               </div>
-                  
+
               <div className="absolute right-2 top-2 z-20 flex items-center space-x-1 rounded bg-white/90 px-2 py-1 text-xs font-semibold text-gray-800 shadow">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 text-yellow-400">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="h-4 w-4 text-yellow-400"
+                >
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.965a1 1 0 00.95.69h4.163c.969 0 1.371 1.24.588 1.81l-3.37 2.448a1 1 0 00-.364 1.118l1.287 3.965c.3.921-.755 1.688-1.54 1.118l-3.37-2.448a1 1 0 00-1.176 0l-3.37 2.448c-.784.57-1.838-.197-1.54-1.118l1.287-3.965a1 1 0 00-.364-1.118L2.11 9.392c-.783-.57-.38-1.81.588-1.81h4.163a1 1 0 00.95-.69L9.05 2.927z" />
                 </svg>
-                <span>{  product.rating}</span>
+                <span>{product.rating}</span>
               </div>
               <div className="mt-4 flex justify-between">
                 <div className=" w-full">
@@ -70,17 +80,14 @@ function ProductsCards({ products, error, isLoading, sortBy }: any) {
                     {product.shippingInformation}
                   </p>
                   <div className="flex items-center w-full space-x-2 space-between">
-
-                
-                   <p className="text-sm font-medium text-green-500">
-                   Discount :  {product.discountPercentage}%  
-                  </p>
+                    <p className="text-sm font-medium text-green-500">
+                      Discount : {product.discountPercentage}%
+                    </p>
                   </div>
                 </div>
                 <p className="text-sm font-medium text-gray-900">
-                  ${product.price} 
+                  ${product.price}
                 </p>
-               
               </div>
 
               {cartItems.find((item: any) => item.id === product.id) ? (
