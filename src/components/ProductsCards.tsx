@@ -21,6 +21,7 @@ function ProductsCards({ products, error, isLoading, sortBy }: any) {
       break;
     case "Price: High to Low":
       products.sort((a: any, b: any) => b.price - a.price);
+      break;
     default:
       break;
   }
